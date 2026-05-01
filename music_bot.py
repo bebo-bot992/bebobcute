@@ -1,6 +1,7 @@
 import asyncio
 import os
 import re
+import tempfile
 import traceback
 from collections import deque
 
@@ -15,7 +16,7 @@ BOT_TOKEN = os.getenv("DISCORD_TOKEN")
 COMMAND_PREFIX = "!"
 EMBED_COLOR = 0x1DB954
 
-# ========== CẤU HÌNH YOUTUBE (ĐÃ FIX LỖI AGE-RESTRICTED) ==========
+# ========== CẤU HÌNH YOUTUBE (FIX LỖI COOKIES) ==========
 YTDL_OPTIONS = {
     "format": "bestaudio/best",
     "noplaylist": False,
@@ -43,9 +44,7 @@ YTDL_OPTIONS = {
     "retries": 5,
     "fragment_retries": 5,
     "skip_unavailable_fragments": True,
-    
-    # ========== FIX CHO RAILWAY ==========
-    "cookiefile": "cookies.txt",  # Dùng file cookies.txt đã upload lên Railway
+    "cookiefile": "cookies.txt",  # Dùng file cookies.txt
 }
 
 FFMPEG_OPTIONS = {
