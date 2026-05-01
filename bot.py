@@ -15,7 +15,7 @@ BOT_TOKEN = os.getenv("DISCORD_TOKEN")
 COMMAND_PREFIX = "!"
 EMBED_COLOR = 0x1DB954
 
-# ========== CẤU HÌNH YOUTUBE (ĐÃ FIX) ==========
+# ========== CẤU HÌNH YOUTUBE (ĐÃ FIX LỖI AGE-RESTRICTED) ==========
 YTDL_OPTIONS = {
     "format": "bestaudio/best",
     "noplaylist": False,
@@ -43,8 +43,9 @@ YTDL_OPTIONS = {
     "retries": 5,
     "fragment_retries": 5,
     "skip_unavailable_fragments": True,
-    # ========== THÊM DÒNG NÀY ĐỂ FIX AGE-RESTRICTED ==========
-    "cookiesfrombrowser": ("chrome",),  # Hoặc "firefox", "edge", "safari"
+    
+    # ========== FIX CHO RAILWAY ==========
+    "cookiefile": "cookies.txt",  # Dùng file cookies.txt đã upload lên Railway
 }
 
 FFMPEG_OPTIONS = {
@@ -183,11 +184,11 @@ class MusicCog(commands.Cog):
         except yt_dlp.utils.DownloadError as e:
             msg = str(e)
             if "403" in msg:
-                tip = "Loi 403: YouTube chan. Thu dung link khac hoac them cookies.txt."
+                tip = "Loi 403: YouTube chan. Thu dung link khac hoac kiem tra cookies.txt."
             elif "Private" in msg:
                 tip = "Video nay bi dat che do rieng tu."
             elif "Sign in" in msg or "age" in msg.lower():
-                tip = "Video bi gioi han do tuoi. Hay thu link khac hoac them cookies.txt vao project."
+                tip = "Video bi gioi han do tuoi. Hay thu link khac hoac kiem tra cookies.txt."
             else:
                 tip = f"Khong tai duoc: {msg[:200]}"
             return await interaction.followup.send(
