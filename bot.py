@@ -15,6 +15,7 @@ BOT_TOKEN = os.getenv("DISCORD_TOKEN")
 COMMAND_PREFIX = "!"
 EMBED_COLOR = 0x1DB954
 
+# ========== CẤU HÌNH YOUTUBE (ĐÃ FIX) ==========
 YTDL_OPTIONS = {
     "format": "bestaudio/best",
     "noplaylist": False,
@@ -42,6 +43,8 @@ YTDL_OPTIONS = {
     "retries": 5,
     "fragment_retries": 5,
     "skip_unavailable_fragments": True,
+    # ========== THÊM DÒNG NÀY ĐỂ FIX AGE-RESTRICTED ==========
+    "cookiesfrombrowser": ("chrome",),  # Hoặc "firefox", "edge", "safari"
 }
 
 FFMPEG_OPTIONS = {
@@ -183,6 +186,8 @@ class MusicCog(commands.Cog):
                 tip = "Loi 403: YouTube chan. Thu dung link khac hoac them cookies.txt."
             elif "Private" in msg:
                 tip = "Video nay bi dat che do rieng tu."
+            elif "Sign in" in msg or "age" in msg.lower():
+                tip = "Video bi gioi han do tuoi. Hay thu link khac hoac them cookies.txt vao project."
             else:
                 tip = f"Khong tai duoc: {msg[:200]}"
             return await interaction.followup.send(
