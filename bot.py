@@ -16,7 +16,7 @@ BOT_TOKEN = os.getenv("DISCORD_TOKEN")
 COMMAND_PREFIX = "!"
 EMBED_COLOR = 0x1DB954
 
-# ========== CẤU HÌNH YOUTUBE (FIX LỖI COOKIES) ==========
+# ========== CẤU HÌNH YOUTUBE (FIX LỖI) ==========
 YTDL_OPTIONS = {
     "format": "bestaudio/best",
     "noplaylist": False,
@@ -44,8 +44,20 @@ YTDL_OPTIONS = {
     "retries": 5,
     "fragment_retries": 5,
     "skip_unavailable_fragments": True,
-    "cookiefile": "cookies.txt",  # Dùng file cookies.txt
 }
+
+# ========== XỬ LÝ COOKIES ==========
+cookies_content = os.getenv("YTDLP_COOKIES")
+if cookies_content:
+    with tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False) as f:
+        f.write(cookies_content)
+        YTDL_OPTIONS["cookiefile"] = f.name
+        print("[OK] Cookies loaded from environment variable")
+elif os.path.exists("cookies.txt"):
+    YTDL_OPTIONS["cookiefile"] = "cookies.txt"
+    print("[OK] Cookies loaded from cookies.txt")
+else:
+    print("[WARNING] No cookies - some videos may be blocked")
 
 FFMPEG_OPTIONS = {
     "before_options": (
@@ -183,11 +195,11 @@ class MusicCog(commands.Cog):
         except yt_dlp.utils.DownloadError as e:
             msg = str(e)
             if "403" in msg:
-                tip = "Loi 403: YouTube chan. Thu dung link khac hoac kiem tra cookies.txt."
+                tip = "Loi 403: YouTube chan. Thu dung link khac hoac kiem tra cookies."
             elif "Private" in msg:
                 tip = "Video nay bi dat che do rieng tu."
             elif "Sign in" in msg or "age" in msg.lower():
-                tip = "Video bi gioi han do tuoi. Hay thu link khac hoac kiem tra cookies.txt."
+                tip = "Video bi gioi han do tuoi. Hay thu link khac hoac kiem tra cookies."
             else:
                 tip = f"Khong tai duoc: {msg[:200]}"
             return await interaction.followup.send(
